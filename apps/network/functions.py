@@ -32,7 +32,7 @@ def notify_new_subscriber(subscriber_id):
                        f"registró una nueva persona:" \
                        f"<p><b>Nombre:</b> {subscriber.full_name}<br> " \
                        f"<b>Email:</b> {subscriber.email}</p>"
-        msg = EmailMultiAlternatives(f"¡Nuevo suscriptor!", html_content, 'from@example.com', [user.email])
+        msg = EmailMultiAlternatives("¡Nuevo suscriptor!", html_content, 'from@example.com', [user.email])
         msg.attach_alternative(html_content, "text/html")
         msg.send()
         log = Log(sent_to=user.email, data=html_content)
