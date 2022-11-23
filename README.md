@@ -4,6 +4,7 @@ Proyecto demo usando Django y Celery del curso [Tareas Asíncronas y Programadas
 Celery es un gestor de tareas distribuido y asíncrono desarrollado en Python. Es una herramienta magnífica para aplicaciones de alta disponibilidad y con alta carga.
 
 ## Descripción
+- Se envían correos al agregarse un nuevo subscritor, nueva publicación.
 
 - Se agregó un archivo de configuración de celery en el directorio `django_celery` llamado [celery.py](django_celery/celery.py)
 
@@ -20,7 +21,29 @@ Celery es un gestor de tareas distribuido y asíncrono desarrollado en Python. E
     - Eliminar logs cada 5 segundos, dejando los últimos 10
     - Enviar un mensaje de inicio de semana los lunes a las 8:00 am
 
-## Pasos
+## Correr proyecto
+1. Crear archivo .env con base al archivo ejemplo .env.example para poder cargar la configuración de la base de datos.
+    ```bash
+    $ cp .env.example .env
+    ```
+2. Instalar dependencias.
+    ```bash
+    $ pip install -r requirements.txt
+    ```
+3. Aplicar migraciones.
+    ```bash
+    $ python manage.py migrate
+    ```
+4. Crear super usuario.
+    ```bash
+    $ python manage.py createsuperuser
+    ```
+4. Iniciar servidor.
+    ```bash
+    $ python manage.py runserver
+    ```
+
+## Pasos para usar Celery
 1. Instalar Celery:
 
 ~~~
