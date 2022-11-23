@@ -1,3 +1,6 @@
+import datetime
+import time
+
 from celery import shared_task
 
 from django.contrib.auth.models import User
@@ -43,3 +46,38 @@ def notify_new_subscriber_async(subscriber_id):
         msg.send()
         log = Log(sent_to=user.email, data=html_content)
         log.save()
+
+
+@shared_task
+def start_week_notify_staff_users_async():
+    """
+    Sending and email.
+    """
+    staffs = User.objects.filter(is_staff=True)
+    for user in staffs:
+        html_content = f"¡Hola {user.first_name}! <b>Buen inicio de semana :)<b>"
+        msg = EmailMultiAlternatives("¡Iniciando la semana!", html_content, 'from@example.com', [user.email])
+        msg.attach_alternative(html_content, "text/html")
+        msg.send()
+        log = Log(sent_to=user.email, data=html_content)
+        log.save()
+
+
+@shared_task
+def delete_logs():
+    """
+    Delete logs except the last 10 with Celery beats.
+    """
+    print(f'------------Eliminando logs - {datetime.datetime.now()} ------------')
+    logs_delete_size = 10
+    logs = Log.objects.all().order_by('-timestamp')
+    print(f'Actualmente hay {logs.count()}')
+    if logs.count() > logs_delete_size:
+        logs_to_delete = Log.objects.filter(pk__in=logs[logs_delete_size:])
+        print(f'Se eliminaran {logs_to_delete.count()}')
+        print(f'Eliminando logs y dejando los últimos {logs_delete_size}')
+        time.sleep(5)
+        logs_to_delete.delete()
+        print('¡Eliminados!')
+    else:
+        print('Sin resultados para eliminar...')
