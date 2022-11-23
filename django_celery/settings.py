@@ -12,6 +12,10 @@ https://docs.djangoproject.com/en/4.1/ref/settings/
 import environ
 from pathlib import Path
 
+from celery.schedules import timedelta, crontab  # Celery Beat
+
+from django_celery.celery import app  # Celery app
+
 env = environ.Env()
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
@@ -142,3 +146,23 @@ EMAIL_HOST_USER = env("EMAIL_HOST_USER")
 EMAIL_HOST_PASSWORD = env("EMAIL_HOST_PASSWORD")
 DEFAULT_FROM_EMAIL = env("DEFAULT_FROM_EMAIL")
 EMAIL_BACKEND = env("EMAIL_BACKEND")
+
+# Celery Configuration Options
+CELERY_TIMEZONE = "America/Mexico_City"
+CELERY_TASK_TRACK_STARTED = True
+CELERY_TASK_TIME_LIMIT = 30 * 60
+
+# Celery beat
+# https://docs.celeryq.dev/en/stable/userguide/periodic-tasks.html#crontab-schedules
+app.conf.beat_schedule = {
+    'start_week_notify_staff_users': {
+        'task': 'apps.network.tasks.start_week_notify_staff_users_async',
+        'schedule': crontab(hour=8, minute=00, day_of_month=1)  # Lunes 08:00 am
+    },
+    'delete_logs': {
+        'task': 'apps.network.tasks.delete_logs',
+        'schedule': timedelta(seconds=5),
+    }
+}
+
+app.conf.timezone = CELERY_TIMEZONE
