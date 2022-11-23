@@ -1,5 +1,5 @@
 # django_celery
-Proyecto demo usando Django y Celery
+Proyecto demo usando Django y Celery del curso [Tareas Asíncronas y Programadas Utilizando Django/Celery/RabbitMQ](https://coderslink.com/talento/tutoriales-de-programacion/tareas-asincronas-con-django-celery-rabbitmq/on-demand/)
 
 Celery es un gestor de tareas distribuido y asíncrono desarrollado en Python. Es una herramienta magnífica para aplicaciones de alta disponibilidad y con alta carga.
 
@@ -36,7 +36,20 @@ pip install -r requirements.txt # paquete desde el requirements.txt
 
 3. Iniciar un worker de Celery:
 
-    `celery -A django_celery worker -l INFO`
+    ~~~
+    celery -A django_celery worker -l INFO # Levantar 1 worker
+
+    celery -A django_celery worker -l INFO --concurrency=1 -n worker1@%h # Levantar 1 worker con concurrencia y asignandole 1 nombre: worker1, %h es para indicar el nombre del host
+    ~~~
 
 4. Para ejecutar las tareas de Celery Beats es necesario ejecutar:
     `celery -A django_celery beat`
+
+5. Para monitorear las tareas utilizaremos podemos utilizar el monitor de Celery o el paquete Flower:
+    - Celery: `celery -A django_celery events`
+    - [flower](https://flower.readthedocs.io/en/latest/index.html):
+    ~~~
+        pip install flower # Instalar
+        celery flower -A django_celery --port=5555 # Iniciar flower
+        http://localhost:5555 # Acceder
+    ~~~
