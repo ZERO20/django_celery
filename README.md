@@ -15,6 +15,11 @@ Celery es un gestor de tareas distribuido y asíncrono desarrollado en Python. E
 
 - Ahora se ejecutará el envío de correos de manera asíncrona
 
+- Se agregó la configuración en el settings para ejecutar tasks con celery beat
+- Dos tasks fueron agregadas:
+    - Eliminar logs cada 5 segundos, dejando los últimos 10
+    - Enviar un mensaje de inicio de semana los lunes a las 8:00 am
+
 ## Pasos
 1. Instalar Celery:
 
@@ -32,3 +37,6 @@ pip install -r requirements.txt # paquete desde el requirements.txt
 3. Iniciar un worker de Celery:
 
     `celery -A django_celery worker -l INFO`
+
+4. Para ejecutar las tareas de Celery Beats es necesario ejecutar:
+    `celery -A django_celery beat`
