@@ -1,5 +1,6 @@
 from django.contrib.auth.models import User
 from django.core.mail import EmailMultiAlternatives
+
 from .models import Subscriber, Post, Log
 
 
